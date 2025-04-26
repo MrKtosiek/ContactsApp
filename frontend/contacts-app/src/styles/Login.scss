@@ -1,0 +1,24 @@
+@use "../styles/_components.scss";
+
+.login-background {
+  display: flex;
+  justify-content: center;
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+
+    label {
+      color: gray;
+      font-size: 0.8em;
+    }
+    input {
+      @include components.input;
+      margin-bottom: 10px;
+    }
+    button {
+      @include components.button;
+    }
+  }
+}
