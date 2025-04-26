@@ -14,10 +14,10 @@ namespace ContactsApp.Services
 			_context = context;
 		}
 
-		public async Task<Contact?> AddContactAsync(NewContactDto dto)
+		public async Task AddContactAsync(NewContactDto dto)
 		{
 			if (await _context.Contacts.AnyAsync(c => c.Email == dto.Email))
-				return null;
+				throw new InvalidOperationException("Contact with this email already exists.");
 
 			var contact = new Contact
 			{
@@ -31,30 +31,40 @@ namespace ContactsApp.Services
 
 			_context.Contacts.Add(contact);
 			await _context.SaveChangesAsync();
-			return contact;
 		}
 
-		public async Task<Contact?> GetContactByIdAsync(int id)
+		public async Task<ContactDetailsDto?> GetContactByIdAsync(int id)
 		{
-			return await _context.Contacts
+			Contact? contact = await _context.Contacts
 				.Include(c => c.Category)
 				.Include(c => c.SubCategory)
 				.FirstOrDefaultAsync(c => c.Id == id);
+
+			if (contact == null)
+			{
+				throw new KeyNotFoundException("Contact not found.");
+			}
+
+			return new ContactDetailsDto(contact);
 		}
 
-		public async Task<IEnumerable<Contact>> GetAllContactsAsync()
+		public async Task<IEnumerable<ContactSummaryDto>> GetAllContactsAsync()
 		{
 			return await _context.Contacts
 				.Include(c => c.Category)
 				.Include(c => c.SubCategory)
+				.Select(c => new ContactSummaryDto(c))
 				.ToListAsync();
 		}
 
-		public async Task<Contact?> UpdateContactByIdAsync(int id, UpdateContactDto dto)
+		public async Task UpdateContactByIdAsync(int id, UpdateContactDto dto)
 		{
 			var contact = await _context.Contacts.FindAsync(id);
+
 			if (contact == null)
-				return null;
+			{
+				throw new KeyNotFoundException("Contact not found.");
+			}
 
 			contact.FirstName = dto.FirstName;
 			contact.LastName = dto.LastName;
@@ -65,7 +75,18 @@ namespace ContactsApp.Services
 			contact.CustomSubCategory = dto.CustomSubCategory;
 
 			await _context.SaveChangesAsync();
-			return contact;
+		}
+
+		public async Task DeleteContactByIdAsync(int id)
+		{
+			var contact = await _context.Contacts.FindAsync(id);
+
+			if (contact == null)
+			{
+				throw new KeyNotFoundException("Contact not found.");
+			}
+
+			_context.Contacts.Remove(contact);
 		}
 	}
 }

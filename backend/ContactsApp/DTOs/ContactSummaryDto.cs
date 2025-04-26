@@ -7,7 +7,14 @@ namespace ContactsApp.DTOs
 		public int Id { get; set; }
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
-		public int CategoryId { get; set; }
-		public Category Category { get; set; }
+		public string Category { get; set; }
+
+		public ContactSummaryDto(Contact contact)
+		{
+			Id = contact.Id;
+			FirstName = contact.FirstName;
+			LastName = contact.LastName;
+			Category = contact.Category.Name;
+		}
 	}
 }

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ContactsApp.Controllers
 {
 	[ApiController]
-	[Route("api/[controller]")]
+	[Route("api/contacts")]
 	public class ContactsController : ControllerBase
 	{
 		private readonly IContactService _contactService;
@@ -35,8 +35,6 @@ namespace ContactsApp.Controllers
 		public IActionResult GetContactById(int id)
 		{
 			var contact = _contactService.GetContactByIdAsync(id).Result;
-			if (contact == null)
-				return NotFound();
 
 			return Ok(contact);
 		}
@@ -45,6 +43,14 @@ namespace ContactsApp.Controllers
 		public IActionResult UpdateContactById(int id, [FromBody] UpdateContactDto dto)
 		{
 			_contactService.UpdateContactByIdAsync(id, dto);
+
+			return Ok();
+		}
+
+		[HttpDelete("{id}")]
+		public IActionResult DeleteContactById(int id)
+		{
+			_contactService.DeleteContactByIdAsync(id);
 
 			return Ok();
 		}

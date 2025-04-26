@@ -1,4 +1,5 @@
 ﻿using ContactsApp.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ContactsApp.Data
 {
@@ -31,15 +32,35 @@ namespace ContactsApp.Data
 
 			if (!context.Contacts.Any())
 			{
-				var kontakt = new Contact
+				var contacts = new List<Contact>
 				{
-					FirstName = "Jan",
-					LastName = "Kowalski",
-					Email = "jan@kowalski.pl",
-					CategoryId = context.Categories.First(c => c.Name == "Private").Id
+					new Contact
+					{
+						FirstName = "Jan",
+						LastName = "Kowalski",
+						Email = "jan@kowalski.pl",
+						PasswordHash = BCrypt.Net.BCrypt.HashPassword("password"),
+						CategoryId = context.Categories.First(c => c.Name == "Private").Id
+					},
+					new Contact
+					{
+						FirstName = "Wojciech",
+						LastName = "Nowak",
+						Email = "wojciech@nowak.pl",
+						PasswordHash = BCrypt.Net.BCrypt.HashPassword("password"),
+						CategoryId = context.Categories.First(c => c.Name == "Private").Id
+					},
+					new Contact
+					{
+						FirstName = "Andrzej",
+						LastName = "Wiśniewski",
+						Email = "andrzej@wisniewski.pl",
+						PasswordHash = BCrypt.Net.BCrypt.HashPassword("password"),
+						CategoryId = context.Categories.First(c => c.Name == "Private").Id
+					}
 				};
 
-				context.Contacts.Add(kontakt);
+				context.Contacts.AddRange(contacts);
 				context.SaveChanges();
 			}
 		}
