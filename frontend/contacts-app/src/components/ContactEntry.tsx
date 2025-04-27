@@ -1,13 +1,21 @@
 import React from "react";
 import { ContactSummaryDto } from "../dtos/ContactSummaryDto";
-import "../styles/ContactEntry.scss";
+import { useNavigate } from "react-router-dom";
+import { CONTACT_ROUTE } from "../Constants";
+import styles from "../styles/ContactEntry.module.scss";
 
 export const ContactEntry: React.FC<{ contact: ContactSummaryDto }> = ({ contact }) => {
+  const navigate = useNavigate();
+
+  const handleDetailsClick = () => {
+    navigate(`${CONTACT_ROUTE}/${contact.id}`);
+  };
+
   return (
-    <div className="contact-entry">
-      <span className="contact-name">{contact.firstName} {contact.lastName}</span>
-      <span className="contact-category">{contact.category}</span>
-      <button className="details-button">Details</button>
+    <div className={styles.contactEntry}>
+      <span className={styles.contactName}>{contact.firstName} {contact.lastName}</span>
+      <span className={styles.contactCategory}>{contact.category}</span>
+      <button className={styles.detailsButton} onClick={handleDetailsClick}>Details</button>
     </div>
   );
 }

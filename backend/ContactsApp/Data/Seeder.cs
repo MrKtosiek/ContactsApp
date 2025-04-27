@@ -11,7 +11,7 @@ namespace ContactsApp.Data
 			{
 				var categories = new List<Category>
 				{
-					new Category { Name = "Business" },
+					new Category { Name = "Work" },
 					new Category { Name = "Private" },
 					new Category { Name = "Other" }
 				};
@@ -19,12 +19,12 @@ namespace ContactsApp.Data
 				context.Categories.AddRange(categories);
 				context.SaveChanges();
 
-				var business = context.Categories.First(c => c.Name == "Business");
+				var work = context.Categories.First(c => c.Name == "Work");
 
 				context.SubCategories.AddRange(new List<SubCategory>
 				{
-					new SubCategory { Name = "Boss", CategoryId = business.Id },
-					new SubCategory { Name = "Client", CategoryId = business.Id }
+					new SubCategory { Name = "Boss", CategoryId = work.Id },
+					new SubCategory { Name = "Client", CategoryId = work.Id }
 				});
 
 				context.SaveChanges();
@@ -39,7 +39,7 @@ namespace ContactsApp.Data
 						FirstName = "Jan",
 						LastName = "Kowalski",
 						Email = "jan@kowalski.pl",
-						PasswordHash = BCrypt.Net.BCrypt.HashPassword("password"),
+						PasswordHash = BCrypt.Net.BCrypt.HashPassword("password123"),
 						CategoryId = context.Categories.First(c => c.Name == "Private").Id
 					},
 					new Contact
@@ -47,16 +47,27 @@ namespace ContactsApp.Data
 						FirstName = "Wojciech",
 						LastName = "Nowak",
 						Email = "wojciech@nowak.pl",
-						PasswordHash = BCrypt.Net.BCrypt.HashPassword("password"),
-						CategoryId = context.Categories.First(c => c.Name == "Private").Id
+						PasswordHash = BCrypt.Net.BCrypt.HashPassword("password456"),
+						CategoryId = context.Categories.First(c => c.Name == "Work").Id,
+						SubCategoryId = context.SubCategories.First(sc => sc.Name == "Client").Id
+					},
+					new Contact
+					{
+						FirstName = "Mariusz",
+						LastName = "Kowalczyk",
+						Email = "mariusz@kowalczyk.pl",
+						PasswordHash = BCrypt.Net.BCrypt.HashPassword("password789"),
+						CategoryId = context.Categories.First(c => c.Name == "Work").Id,
+						SubCategoryId = context.SubCategories.First(sc => sc.Name == "Boss").Id
 					},
 					new Contact
 					{
 						FirstName = "Andrzej",
 						LastName = "Wiśniewski",
 						Email = "andrzej@wisniewski.pl",
-						PasswordHash = BCrypt.Net.BCrypt.HashPassword("password"),
-						CategoryId = context.Categories.First(c => c.Name == "Private").Id
+						PasswordHash = BCrypt.Net.BCrypt.HashPassword("password321"),
+						CategoryId = context.Categories.First(c => c.Name == "Other").Id,
+						CustomSubCategory = "Friend"
 					}
 				};
 

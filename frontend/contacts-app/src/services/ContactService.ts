@@ -3,6 +3,7 @@ import { API_URL } from "../Constants";
 import { ContactSummaryDto } from "../dtos/ContactSummaryDto";
 import { NewContactDto } from "../dtos/NewContactDto";
 import { UpdateContactDto } from "../dtos/UpdateContactDto";
+import { ContactDetailsDto } from "../dtos/ContactDetailsDto";
 
 export class ContactService {
   private axiosInstance: AxiosInstance;
@@ -35,7 +36,7 @@ export class ContactService {
     }
   }
 
-  async getContactById(id: number): Promise<ContactSummaryDto> {
+  async getContactById(id: number): Promise<ContactDetailsDto> {
     try {
       const response = await this.axiosInstance.get(`/contacts/${id}`);
       return response.data;

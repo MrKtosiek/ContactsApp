@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ContactService from "../services/ContactService";
 import { ContactSummaryDto } from "../dtos/ContactSummaryDto";
 import { ContactEntry } from "./ContactEntry";
-import "../styles/ContactList.scss";
+import styles from "../styles/ContactList.module.scss";
 
 export const ContactList: React.FC = () => {
   const [contacts, setContacts] = useState<ContactSummaryDto[]>([]);
@@ -21,7 +21,7 @@ export const ContactList: React.FC = () => {
   }, []);
 
   return (
-    <div className="contact-list">
+    <div className={styles.contactList}>
       {contacts.map((contact) => (
         <ContactEntry key={contact.id} contact={contact} />
       ))}

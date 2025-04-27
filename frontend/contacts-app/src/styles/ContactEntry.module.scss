@@ -1,21 +1,21 @@
 @use "_components.scss";
 
-.contact-entry {
+.contactEntry {
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 2px solid black;
   padding: 10px 20px;
 
-  .contact-name {
+  .contactName {
     margin-right: auto;
   }
 
-  .contact-category {
+  .contactCategory {
     margin-left: 20px;
   }
 
-  .details-button {
+  .detailsButton {
     margin-left: 20px;
     @include components.button;
   }
