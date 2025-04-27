@@ -10,7 +10,9 @@
 		public int CategoryId { get; set; }
 		public Category Category { get; set; }
 		public int? SubCategoryId { get; set; }
-		public SubCategory? SubCategory { get; set; } // null if category is "Other"
+		public SubCategory? SubCategory { get; set; } // only used if category is "Private"
 		public string? CustomSubCategory { get; set; } // only used if category is "Other"
+		public string PhoneNumber { get; set; }
+		public DateOnly BirthDate { get; set; }
 	}
 }

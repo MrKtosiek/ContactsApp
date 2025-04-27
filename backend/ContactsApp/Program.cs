@@ -1,4 +1,5 @@
 using ContactsApp.Data;
+using ContactsApp.Middleware;
 using ContactsApp.Services;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -45,6 +46,8 @@ using (var scope = app.Services.CreateScope())
 	dbContext.Database.EnsureCreated();
 	Seeder.Seed(dbContext);
 }
+
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 

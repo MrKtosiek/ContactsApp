@@ -19,13 +19,21 @@ namespace ContactsApp.Services
 			if (await _context.Contacts.AnyAsync(c => c.Email == dto.Email))
 				throw new InvalidOperationException("Contact with this email already exists.");
 
+			Category? category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == dto.Category);
+			if (category == null)
+				throw new ArgumentException("Invalid category.");
+
+			SubCategory? subCategory = category.SubCategories.FirstOrDefault(sc => sc.Name == dto.SubCategory);
+			if (subCategory == null)
+				throw new ArgumentException("Invalid subcategory.");
+
 			var contact = new Contact
 			{
 				FirstName = dto.FirstName,
 				LastName = dto.LastName,
 				Email = dto.Email,
-				CategoryId = dto.CategoryId,
-				SubCategoryId = dto.SubCategoryId,
+				Category = category,
+				SubCategory = subCategory,
 				CustomSubCategory = dto.CustomSubCategory
 			};
 
@@ -62,16 +70,24 @@ namespace ContactsApp.Services
 			var contact = await _context.Contacts.FindAsync(id);
 
 			if (contact == null)
-			{
 				throw new KeyNotFoundException("Contact not found.");
-			}
+
+			if (await _context.Contacts.AnyAsync(c => c != contact && c.Email == dto.Email))
+				throw new InvalidOperationException("This email is already used by another contact.");
+
+			Category? category = await _context.Categories.Include(c => c.SubCategories).FirstOrDefaultAsync(c => c.Name == dto.Category);
+			if (category == null)
+				throw new ArgumentException("Invalid category.");
+
+			if (!CheckSubCategoryRules(dto.SubCategory, dto.CustomSubCategory, category))
+				throw new ArgumentException("Invalid subcategory.");
 
 			contact.FirstName = dto.FirstName;
 			contact.LastName = dto.LastName;
 			contact.Email = dto.Email;
 			contact.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-			contact.CategoryId = dto.CategoryId;
-			contact.SubCategoryId = dto.SubCategoryId;
+			contact.Category = category;
+			contact.SubCategory = category.SubCategories.FirstOrDefault(c => c.Name == dto.SubCategory);
 			contact.CustomSubCategory = dto.CustomSubCategory;
 
 			await _context.SaveChangesAsync();
@@ -87,6 +103,30 @@ namespace ContactsApp.Services
 			}
 
 			_context.Contacts.Remove(contact);
+		}
+
+
+		private bool CheckSubCategoryRules(string? subCategoryName, string? customSubCategoryName, Category category)
+		{
+			if (category.Name == "Work")
+			{
+				if (string.IsNullOrEmpty(subCategoryName))
+				{
+					return false;
+				}
+				if (!_context.SubCategories.Any(sc => sc.Name == subCategoryName))
+				{
+					return false;
+				}
+			}
+			else if (category.Name == "Other")
+			{
+				if (string.IsNullOrEmpty(customSubCategoryName))
+				{
+					return false;
+				}
+			}
+			return true;
 		}
 	}
 }

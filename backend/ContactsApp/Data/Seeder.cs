@@ -40,7 +40,9 @@ namespace ContactsApp.Data
 						LastName = "Kowalski",
 						Email = "jan@kowalski.pl",
 						PasswordHash = BCrypt.Net.BCrypt.HashPassword("password123"),
-						CategoryId = context.Categories.First(c => c.Name == "Private").Id
+						CategoryId = context.Categories.First(c => c.Name == "Private").Id,
+						PhoneNumber = "123456789",
+						BirthDate = new DateOnly(1970, 1, 1)
 					},
 					new Contact
 					{
@@ -49,7 +51,9 @@ namespace ContactsApp.Data
 						Email = "wojciech@nowak.pl",
 						PasswordHash = BCrypt.Net.BCrypt.HashPassword("password456"),
 						CategoryId = context.Categories.First(c => c.Name == "Work").Id,
-						SubCategoryId = context.SubCategories.First(sc => sc.Name == "Client").Id
+						SubCategoryId = context.SubCategories.First(sc => sc.Name == "Client").Id,
+						PhoneNumber = "987654321",
+						BirthDate = new DateOnly(1993, 12, 10)
 					},
 					new Contact
 					{
@@ -58,7 +62,9 @@ namespace ContactsApp.Data
 						Email = "mariusz@kowalczyk.pl",
 						PasswordHash = BCrypt.Net.BCrypt.HashPassword("password789"),
 						CategoryId = context.Categories.First(c => c.Name == "Work").Id,
-						SubCategoryId = context.SubCategories.First(sc => sc.Name == "Boss").Id
+						SubCategoryId = context.SubCategories.First(sc => sc.Name == "Boss").Id,
+						PhoneNumber = "321654987",
+						BirthDate = new DateOnly(1981, 12, 13)
 					},
 					new Contact
 					{
@@ -67,7 +73,9 @@ namespace ContactsApp.Data
 						Email = "andrzej@wisniewski.pl",
 						PasswordHash = BCrypt.Net.BCrypt.HashPassword("password321"),
 						CategoryId = context.Categories.First(c => c.Name == "Other").Id,
-						CustomSubCategory = "Friend"
+						CustomSubCategory = "Dentist",
+						PhoneNumber = "789456123",
+						BirthDate = new DateOnly(2000, 2, 24)
 					}
 				};
 

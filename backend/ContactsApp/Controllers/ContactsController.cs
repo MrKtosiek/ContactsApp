@@ -16,41 +16,41 @@ namespace ContactsApp.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult AddContact([FromBody] NewContactDto dto)
+		public async Task<IActionResult> AddContact([FromBody] NewContactDto dto)
 		{
-			_contactService.AddContactAsync(dto).Wait();
+			await _contactService.AddContactAsync(dto);
 
 			return Ok();
 		}
 
 		[HttpGet]
-		public IActionResult GetAllContacts()
+		public async Task<IActionResult> GetAllContactsAsync()
 		{
-			var contacts = _contactService.GetAllContactsAsync().Result;
+			var contacts = await _contactService.GetAllContactsAsync();
 
 			return Ok(contacts);
 		}
 
 		[HttpGet("{id}")]
-		public IActionResult GetContactById(int id)
+		public async Task<IActionResult> GetContactByIdAsync(int id)
 		{
-			var contact = _contactService.GetContactByIdAsync(id).Result;
+			var contact = await _contactService.GetContactByIdAsync(id);
 
 			return Ok(contact);
 		}
 
 		[HttpPut("{id}")]
-		public IActionResult UpdateContactById(int id, [FromBody] UpdateContactDto dto)
+		public async Task<IActionResult> UpdateContactByIdAsync(int id, [FromBody] UpdateContactDto dto)
 		{
-			_contactService.UpdateContactByIdAsync(id, dto);
+			await _contactService.UpdateContactByIdAsync(id, dto);
 
 			return Ok();
 		}
 
 		[HttpDelete("{id}")]
-		public IActionResult DeleteContactById(int id)
+		public async Task<IActionResult> DeleteContactByIdAsync(int id)
 		{
-			_contactService.DeleteContactByIdAsync(id);
+			await _contactService.DeleteContactByIdAsync(id);
 
 			return Ok();
 		}

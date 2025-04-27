@@ -11,6 +11,9 @@ namespace ContactsApp.DTOs
 		public int CategoryId { get; set; }
 		public string Category { get; set; }
 		public string? SubCategory { get; set; }
+		public string? CustomSubCategory { get; set; }
+		public string PhoneNumber { get; set; }
+		public DateOnly BirthDate { get; set; }
 
 		public ContactDetailsDto(Contact contact)
 		{
@@ -20,19 +23,10 @@ namespace ContactsApp.DTOs
 			Email = contact.Email;
 			CategoryId = contact.CategoryId;
 			Category = contact.Category.Name;
-
-			if (contact.SubCategory != null)
-			{
-				SubCategory = contact.SubCategory.Name;
-			}
-			else if (contact.CustomSubCategory != null)
-			{
-				SubCategory = contact.CustomSubCategory;
-			}
-			else
-			{
-				SubCategory = null;
-			}
+			SubCategory = contact.SubCategory?.Name;
+			CustomSubCategory = contact.CustomSubCategory;
+			PhoneNumber = contact.PhoneNumber;
+			BirthDate = contact.BirthDate;
 		}
 
 	}

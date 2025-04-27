@@ -5,11 +5,9 @@ namespace ContactsApp.DTOs
 {
 	public class UpdateContactDto
 	{
-		[Required]
-		public string FirstName { get; set; }
+		[Required] public string FirstName { get; set; }
 
-		[Required]
-		public string LastName { get; set; }
+		[Required] public string LastName { get; set; }
 
 		[Required]
 		[EmailAddress]
@@ -19,9 +17,11 @@ namespace ContactsApp.DTOs
 		[MinLength(8)]
 		public string Password { get; set; }
 
-		[Required]
-		public int CategoryId { get; set; }
-		public int? SubCategoryId { get; set; }
+		[Required] public string Category { get; set; }
+		public string? SubCategory { get; set; }
 		public string? CustomSubCategory { get; set; }
+
+		[Required] public string PhoneNumber { get; set; }
+		[Required] public DateOnly BirthDate { get; set; }
 	}
 }
