@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
-import { ContactDetailsDto } from "../dtos/ContactDetailsDto";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ContactService from "../services/ContactService";
 import { MAIN_PAGE_ROUTE } from "../Constants";
 import { useForm } from "react-hook-form";
-import { UpdateContactDto } from "../dtos/UpdateContactDto";
 import styles from "../styles/UpdateContactForm.module.scss";
+import { NewContactDto } from "../dtos/NewContactDto";
 
-export const UpdateContactForm: React.FC<{ contact: ContactDetailsDto }> = ({ contact }) => {
+export const AddContactForm: React.FC = () => {
   const FIRST_NAME_INPUT = "firstName";
   const LAST_NAME_INPUT = "lastName";
   const EMAIL_INPUT = "email";
@@ -19,38 +18,35 @@ export const UpdateContactForm: React.FC<{ contact: ContactDetailsDto }> = ({ co
   const CUSTOM_SUBCATEGORY_INPUT = "customSubCategory";
 
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
-  const { register, handleSubmit, reset, watch, setValue } = useForm<UpdateContactDto>();
+  const { register, handleSubmit, reset, watch, setValue } = useForm<NewContactDto>();
   const category = watch(CATEGORY_DROPDOWN);
 
   useEffect(() => {
-    reset(contact);
-  }, [contact, reset]);
+    reset();
+  }, [reset]);
 
   const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCategory = event.target.value;
     setValue(CATEGORY_DROPDOWN, selectedCategory);
 
     if (selectedCategory === "Work") {
-      setValue(SUBCATEGORY_DROPDOWN, contact?.subCategory || "Boss");
+      setValue(SUBCATEGORY_DROPDOWN, "Boss");
       setValue(CUSTOM_SUBCATEGORY_INPUT, null);
     } else if (selectedCategory === "Other") {
       setValue(SUBCATEGORY_DROPDOWN, null);
-      setValue(CUSTOM_SUBCATEGORY_INPUT, contact?.customSubCategory || "");
+      setValue(CUSTOM_SUBCATEGORY_INPUT, "");
     } else {
       setValue(SUBCATEGORY_DROPDOWN, null);
       setValue(CUSTOM_SUBCATEGORY_INPUT, null);
     }
   };
 
-  const onSubmit = async (data: UpdateContactDto) => {
-    if (id) {
-      try {
-        await ContactService.updateContact(parseInt(id), data);
-        navigate(MAIN_PAGE_ROUTE);
-      } catch (error) {
-        console.error("Error updating contact:", error);
-      }
+  const onSubmit = async (data: NewContactDto) => {
+    try {
+      await ContactService.addContact(data);
+      navigate(MAIN_PAGE_ROUTE);
+    } catch (error) {
+      console.error("Error updating contact:", error);
     }
   };
 

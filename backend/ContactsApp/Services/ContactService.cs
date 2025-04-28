@@ -19,7 +19,9 @@ namespace ContactsApp.Services
 			if (await _context.Contacts.AnyAsync(c => c.Email == dto.Email))
 				throw new InvalidOperationException("Contact with this email already exists.");
 
-			Category? category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == dto.Category);
+			Category? category = await _context.Categories
+				.Include(c => c.SubCategories)
+				.FirstOrDefaultAsync(c => c.Name == dto.Category);
 			if (category == null)
 				throw new ArgumentException("Invalid category.");
 

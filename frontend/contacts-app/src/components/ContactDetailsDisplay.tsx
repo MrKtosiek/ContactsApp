@@ -22,6 +22,9 @@ export const ContactDetailsDisplay: React.FC<{ contact: ContactDetailsDto }> = (
         <p className={styles.label}>Birth date</p>
         <p className={styles.field}>{contact.birthDate.toString()}</p>
 
+        <p className={styles.label}>Password</p>
+        <p className={styles.field}>{contact.password}</p>
+
         <p className={styles.label}>Category</p>
         <p className={styles.field}>{contact.category}</p>
 
