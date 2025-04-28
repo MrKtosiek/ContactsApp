@@ -26,7 +26,7 @@ namespace ContactsApp.Middleware
 				// Set status to 500
 				httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 				httpContext.Response.ContentType = "application/json";
-				var errorResponse = new { message = "An unexpected error occurred. Please try again later." };
+				var errorResponse = new { message = ex.Message };
 				await httpContext.Response.WriteAsJsonAsync(errorResponse);
 			}
 		}

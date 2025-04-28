@@ -12,6 +12,16 @@
   }
 }
 
+@mixin deleteButton {
+  @include button;
+  color: darkred;
+  border: 2px solid darkred;
+
+  &:hover {
+    background-color: darkred;
+  }
+}
+
 @mixin input {
   padding: 3px;
   background-color: white;

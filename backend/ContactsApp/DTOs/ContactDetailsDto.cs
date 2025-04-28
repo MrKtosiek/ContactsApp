@@ -8,7 +8,7 @@ namespace ContactsApp.DTOs
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
 		public string Email { get; set; }
-		public int CategoryId { get; set; }
+		public string Password { get; set; } // This wouldn't be included in a real application
 		public string Category { get; set; }
 		public string? SubCategory { get; set; }
 		public string? CustomSubCategory { get; set; }
@@ -21,7 +21,7 @@ namespace ContactsApp.DTOs
 			FirstName = contact.FirstName;
 			LastName = contact.LastName;
 			Email = contact.Email;
-			CategoryId = contact.CategoryId;
+			Password = contact.Password; // This wouldn't be included in a real application
 			Category = contact.Category.Name;
 			SubCategory = contact.SubCategory?.Name;
 			CustomSubCategory = contact.CustomSubCategory;

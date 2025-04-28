@@ -1,4 +1,4 @@
-@use "../styles/_components.scss";
+@use "_components.scss";
 
 .content {
   width: 80%;
@@ -6,7 +6,7 @@
   margin: 0 auto;
   margin-top: 30px;
 
-  .updateForm {
+  .form {
     display: flex;
     flex-direction: column;
     margin-top: 10px;

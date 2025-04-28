@@ -1,18 +1,20 @@
-﻿namespace ContactsApp.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ContactsApp.Models
 {
 	public class Contact
 	{
 		public int Id { get; set; }
-		public string FirstName { get; set; }
-		public string LastName { get; set; }
-		public string Email { get; set; } // unique among each user's contacts
-		public string PasswordHash { get; set; }
-		public int CategoryId { get; set; }
+		[Required] public string FirstName { get; set; }
+		[Required] public string LastName { get; set; }
+		[Required, EmailAddress] public string Email { get; set; } // unique among each user's contacts
+		[Required, MinLength(8)] public string Password { get; set; } // This shouldn't be stored in a real application
+		[Required] public int CategoryId { get; set; }
 		public Category Category { get; set; }
 		public int? SubCategoryId { get; set; }
-		public SubCategory? SubCategory { get; set; } // only used if category is "Private"
+		public SubCategory? SubCategory { get; set; } // only used if category is "Work"
 		public string? CustomSubCategory { get; set; } // only used if category is "Other"
-		public string PhoneNumber { get; set; }
-		public DateOnly BirthDate { get; set; }
+		[Required, Phone] public string PhoneNumber { get; set; }
+		[Required] public DateOnly BirthDate { get; set; }
 	}
 }

@@ -1,6 +1,16 @@
+@use "_components.scss";
+
 .contactList {
   display: flex;
   flex-direction: column;
   border-top: 2px solid black;
   margin-top: 10px;
+}
+
+.addContactButton {
+  margin: 0 auto;
+  margin-top: 20px;
+  text-align: center;
+  width: 200px;
+  @include components.button;
 }

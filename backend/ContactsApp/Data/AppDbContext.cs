@@ -16,9 +16,28 @@ namespace ContactsApp.Data
 		{
 			base.OnModelCreating(modelBuilder);
 
+			// Email uniqueness
 			modelBuilder.Entity<Contact>()
 				.HasIndex(c => c.Email)
-				.IsUnique(); // Email musi być unikalny
+				.IsUnique();
+
+			// Contact-Category relationship
+			modelBuilder.Entity<Contact>()
+				.HasOne(c => c.Category)
+				.WithMany()
+				.HasForeignKey(c => c.CategoryId);
+
+			// Contact-SubCategory relationship
+			modelBuilder.Entity<Contact>()
+				.HasOne(c => c.SubCategory)
+				.WithMany(sc => sc.Contacts)
+				.HasForeignKey(c => c.SubCategoryId);
+
+			// Category-SubCategory relationship
+			modelBuilder.Entity<SubCategory>()
+				.HasOne(sc => sc.Category)
+				.WithMany(c => c.SubCategories)
+				.HasForeignKey(sc => sc.CategoryId);
 		}
 	}
 }

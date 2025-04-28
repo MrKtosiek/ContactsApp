@@ -19,4 +19,9 @@
     margin-left: 20px;
     @include components.button;
   }
+
+  .deleteButton {
+    margin-left: 10px;
+    @include components.deleteButton;
+  }
 }

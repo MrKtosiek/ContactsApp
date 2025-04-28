@@ -23,8 +23,7 @@ namespace ContactsApp.Services
 			if (category == null)
 				throw new ArgumentException("Invalid category.");
 
-			SubCategory? subCategory = category.SubCategories.FirstOrDefault(sc => sc.Name == dto.SubCategory);
-			if (subCategory == null)
+			if (!CheckSubCategoryRules(dto.SubCategory, dto.CustomSubCategory, category))
 				throw new ArgumentException("Invalid subcategory.");
 
 			var contact = new Contact
@@ -32,9 +31,12 @@ namespace ContactsApp.Services
 				FirstName = dto.FirstName,
 				LastName = dto.LastName,
 				Email = dto.Email,
+				Password = dto.Password,
 				Category = category,
-				SubCategory = subCategory,
-				CustomSubCategory = dto.CustomSubCategory
+				SubCategory = category.SubCategories.FirstOrDefault(c => c.Name == dto.SubCategory),
+				CustomSubCategory = dto.CustomSubCategory,
+				PhoneNumber = dto.PhoneNumber,
+				BirthDate = dto.BirthDate
 			};
 
 			_context.Contacts.Add(contact);
@@ -75,7 +77,9 @@ namespace ContactsApp.Services
 			if (await _context.Contacts.AnyAsync(c => c != contact && c.Email == dto.Email))
 				throw new InvalidOperationException("This email is already used by another contact.");
 
-			Category? category = await _context.Categories.Include(c => c.SubCategories).FirstOrDefaultAsync(c => c.Name == dto.Category);
+			Category? category = await _context.Categories
+				.Include(c => c.SubCategories)
+				.FirstOrDefaultAsync(c => c.Name == dto.Category);
 			if (category == null)
 				throw new ArgumentException("Invalid category.");
 
@@ -85,10 +89,12 @@ namespace ContactsApp.Services
 			contact.FirstName = dto.FirstName;
 			contact.LastName = dto.LastName;
 			contact.Email = dto.Email;
-			contact.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+			contact.Password = dto.Password;
 			contact.Category = category;
 			contact.SubCategory = category.SubCategories.FirstOrDefault(c => c.Name == dto.SubCategory);
 			contact.CustomSubCategory = dto.CustomSubCategory;
+			contact.PhoneNumber = dto.PhoneNumber;
+			contact.BirthDate = dto.BirthDate;
 
 			await _context.SaveChangesAsync();
 		}
@@ -103,6 +109,7 @@ namespace ContactsApp.Services
 			}
 
 			_context.Contacts.Remove(contact);
+			await _context.SaveChangesAsync();
 		}
 
 

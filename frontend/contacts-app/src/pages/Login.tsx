@@ -5,8 +5,9 @@ export const Login: React.FC = () => {
   return (
     <>
       <Header />
-      <div className={styles.loginBackground}>
-        <form className={styles.loginForm}>
+      <div className={styles.content}>
+        <h3>Login</h3>
+        <form className={styles.form}>
           <label htmlFor="username">Username</label>
           <input type="text" id="username" required />
 

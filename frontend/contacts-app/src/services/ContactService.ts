@@ -47,10 +47,20 @@ export class ContactService {
   }
 
   async updateContact(id: number, contact: UpdateContactDto) {
+    console.log(JSON.stringify(contact));
     try {
       await this.axiosInstance.put(`/contacts/${id}`, contact);
     } catch (error) {
       console.error("Error updating contact:", error);
+      throw error;
+    }
+  }
+
+  async deleteContact(id: number) {
+    try {
+      await this.axiosInstance.delete(`/contacts/${id}`);
+    } catch (error) {
+      console.error("Error deleting contact:", error);
       throw error;
     }
   }
