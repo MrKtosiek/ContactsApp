@@ -3,11 +3,8 @@ import ContactService from "../services/ContactService";
 import { ContactSummaryDto } from "../dtos/ContactSummaryDto";
 import { ContactEntry } from "./ContactEntry";
 import styles from "../styles/ContactList.module.scss";
-import { useNavigate } from "react-router-dom";
-import { ADD_CONTACT_ROUTE } from "../Constants";
 
 export const ContactList: React.FC = () => {
-  const navigate = useNavigate();
   const [contacts, setContacts] = useState<ContactSummaryDto[]>([]);
 
   const fetchContacts = async () => {
@@ -31,9 +28,6 @@ export const ContactList: React.FC = () => {
           <ContactEntry key={contact.id} contact={contact} refresh={fetchContacts} />
         ))}
       </div>
-      <a onClick={() => navigate(ADD_CONTACT_ROUTE)} className={styles.addContactButton}>
-        Add contact
-      </a>
     </>
   );
 };

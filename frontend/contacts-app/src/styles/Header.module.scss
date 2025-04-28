@@ -14,11 +14,20 @@
     cursor: pointer;
   }
 
-  .loginButton {
+  .button {
     @include components.button;
-    margin-right: 20px;
-    width: 150px;
+    width: 100px;
     text-align: center;
+  }
+
+  .loginButton {
+    margin-right: 10px;
     margin-left: auto;
+  }
+  .registerButton {
+    margin-right: 20px;
+  }
+  .logoutButton {
+    margin-right: 20px;
   }
 }

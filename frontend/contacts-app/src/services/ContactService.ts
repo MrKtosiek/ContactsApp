@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { API_URL } from "../Constants";
+import { CONTACTS_API_URL, TOKEN_KEY } from "../Constants";
 import { ContactSummaryDto } from "../dtos/ContactSummaryDto";
 import { NewContactDto } from "../dtos/NewContactDto";
 import { UpdateContactDto } from "../dtos/UpdateContactDto";
@@ -10,7 +10,7 @@ export class ContactService {
 
   constructor() {
     this.axiosInstance = axios.create({
-      baseURL: API_URL,
+      baseURL: CONTACTS_API_URL,
       headers: {
         "Content-Type": "application/json",
       },
@@ -19,7 +19,9 @@ export class ContactService {
 
   async addContact(contact: NewContactDto) {
     try {
-      await this.axiosInstance.post("/contacts", contact);
+      await this.axiosInstance.post("", contact, {
+        headers: { Authorization: `Bearer ${sessionStorage.getItem(TOKEN_KEY)}` },
+      });
     } catch (error) {
       console.error("Error adding contact:", error);
       throw error;
@@ -28,7 +30,7 @@ export class ContactService {
 
   async getAllContacts(): Promise<ContactSummaryDto[]> {
     try {
-      const response = await this.axiosInstance.get("/contacts");
+      const response = await this.axiosInstance.get("");
       return response.data;
     } catch (error) {
       console.error("Error fetching contacts:", error);
@@ -38,7 +40,7 @@ export class ContactService {
 
   async getContactById(id: number): Promise<ContactDetailsDto> {
     try {
-      const response = await this.axiosInstance.get(`/contacts/${id}`);
+      const response = await this.axiosInstance.get(`/${id}`);
       return response.data;
     } catch (error) {
       console.error("Error fetching contact:", error);
@@ -47,9 +49,10 @@ export class ContactService {
   }
 
   async updateContact(id: number, contact: UpdateContactDto) {
-    console.log(JSON.stringify(contact));
     try {
-      await this.axiosInstance.put(`/contacts/${id}`, contact);
+      await this.axiosInstance.put(`/${id}`, contact, {
+        headers: { Authorization: `Bearer ${sessionStorage.getItem(TOKEN_KEY)}` },
+      });
     } catch (error) {
       console.error("Error updating contact:", error);
       throw error;
@@ -58,7 +61,9 @@ export class ContactService {
 
   async deleteContact(id: number) {
     try {
-      await this.axiosInstance.delete(`/contacts/${id}`);
+      await this.axiosInstance.delete(`/${id}`, {
+        headers: { Authorization: `Bearer ${sessionStorage.getItem(TOKEN_KEY)}` },
+      });
     } catch (error) {
       console.error("Error deleting contact:", error);
       throw error;

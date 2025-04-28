@@ -1,21 +1,23 @@
 ﻿using ContactsApp.DTOs;
 using ContactsApp.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsApp.Controllers
 {
 	[ApiController]
 	[Route("api/contacts")]
-	public class ContactsController : ControllerBase
+	public class ContactController : ControllerBase
 	{
 		private readonly IContactService _contactService;
 
-		public ContactsController(IContactService contactService)
+		public ContactController(IContactService contactService)
 		{
 			_contactService = contactService;
 		}
 
 		[HttpPost]
+		[Authorize]
 		public async Task<IActionResult> AddContact([FromBody] NewContactDto dto)
 		{
 			await _contactService.AddContactAsync(dto);
@@ -40,6 +42,7 @@ namespace ContactsApp.Controllers
 		}
 
 		[HttpPut("{id}")]
+		[Authorize]
 		public async Task<IActionResult> UpdateContactByIdAsync(int id, [FromBody] UpdateContactDto dto)
 		{
 			await _contactService.UpdateContactByIdAsync(id, dto);
@@ -48,6 +51,7 @@ namespace ContactsApp.Controllers
 		}
 
 		[HttpDelete("{id}")]
+		[Authorize]
 		public async Task<IActionResult> DeleteContactByIdAsync(int id)
 		{
 			await _contactService.DeleteContactByIdAsync(id);

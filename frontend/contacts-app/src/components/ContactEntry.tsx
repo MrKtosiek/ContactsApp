@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { CONTACT_ROUTE } from "../Constants";
 import styles from "../styles/ContactEntry.module.scss";
 import ContactService from "../services/ContactService";
+import UserService from "../services/UserService";
 
-export const ContactEntry: React.FC<{ contact: ContactSummaryDto, refresh: () => void }> = ({ contact, refresh }) => {
+export const ContactEntry: React.FC<{ contact: ContactSummaryDto; refresh: () => void }> = ({ contact, refresh }) => {
   const navigate = useNavigate();
 
   const handleDetailsClick = () => {
@@ -19,10 +20,18 @@ export const ContactEntry: React.FC<{ contact: ContactSummaryDto, refresh: () =>
 
   return (
     <div className={styles.contactEntry}>
-      <span className={styles.contactName}>{contact.firstName} {contact.lastName}</span>
+      <span className={styles.contactName}>
+        {contact.firstName} {contact.lastName}
+      </span>
       <span className={styles.contactCategory}>{contact.category}</span>
-      <button className={styles.detailsButton} onClick={handleDetailsClick}>Details</button>
-      <button className={styles.deleteButton} onClick={handleDeleteClick}>Delete</button>
+      <button className={styles.detailsButton} onClick={handleDetailsClick}>
+        Details
+      </button>
+      {UserService.isLoggedIn() && (
+          <button className={styles.deleteButton} onClick={handleDeleteClick}>
+            Delete
+          </button>
+      )}
     </div>
   );
-}
+};

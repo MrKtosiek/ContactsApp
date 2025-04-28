@@ -1,22 +1,22 @@
 import { useForm } from "react-hook-form";
 import { Header } from "../components/Header";
-import styles from "../styles/Login.module.scss";
-import { LoginDto } from "../dtos/LoginDto";
-import { MAIN_PAGE_ROUTE } from "../Constants";
+import styles from "../styles/Register.module.scss";
+import { LOGIN_ROUTE } from "../Constants";
 import { useNavigate } from "react-router-dom";
 import UserService from "../services/UserService";
+import { RegisterDto } from "../dtos/RegisterDto";
 
-export const Login: React.FC = () => {
+export const Register: React.FC = () => {
   const USERNAME_INPUT = "username";
   const PASSWORD_INPUT = "password";
 
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<LoginDto>();
+  const { register, handleSubmit } = useForm<RegisterDto>();
 
-  const onSubmit = async (data: LoginDto) => {
+  const onSubmit = async (data: RegisterDto) => {
     try {
-      await UserService.loginUser(data);
-      navigate(MAIN_PAGE_ROUTE);
+      await UserService.registerUser(data);
+      navigate(LOGIN_ROUTE);
     } catch (error) {
       console.error("Error logging in user:", error);
     }
@@ -26,7 +26,7 @@ export const Login: React.FC = () => {
     <>
       <Header />
       <div className={styles.content}>
-        <h3>Login</h3>
+        <h3>Register</h3>
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
           <label htmlFor={USERNAME_INPUT}>Username</label>
           <input id={USERNAME_INPUT} {...register(USERNAME_INPUT, { required: true })} />
@@ -34,7 +34,7 @@ export const Login: React.FC = () => {
           <label htmlFor={PASSWORD_INPUT}>Password</label>
           <input type="password" id={PASSWORD_INPUT} {...register(PASSWORD_INPUT, { required: true })} />
 
-          <button type="submit">Login</button>
+          <button type="submit">Register</button>
         </form>
       </div>
     </>

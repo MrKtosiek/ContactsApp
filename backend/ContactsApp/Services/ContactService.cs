@@ -39,7 +39,7 @@ namespace ContactsApp.Services
 				BirthDate = dto.BirthDate
 			};
 
-			_context.Contacts.Add(contact);
+			await _context.Contacts.AddAsync(contact);
 			await _context.SaveChangesAsync();
 		}
 

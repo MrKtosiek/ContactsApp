@@ -1,10 +1,11 @@
-﻿namespace ContactsApp.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ContactsApp.Models
 {
 	public class User
 	{
-		public int Id { get; set; }
-		public string Name { get; set; }
-		public string PasswordHash { get; set; }
-		public List<Contact> Contacts { get; set; } = [];
+		[Required] public int Id { get; set; }
+		[Required] public string Name { get; set; }
+		[Required] public string PasswordHash { get; set; }
 	}
 }

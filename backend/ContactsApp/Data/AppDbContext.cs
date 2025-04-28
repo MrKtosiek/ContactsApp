@@ -8,6 +8,7 @@ namespace ContactsApp.Data
 	{
 		public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
+		public DbSet<User> Users { get; set; }
 		public DbSet<Contact> Contacts { get; set; }
 		public DbSet<Category> Categories { get; set; }
 		public DbSet<SubCategory> SubCategories { get; set; }
@@ -15,6 +16,11 @@ namespace ContactsApp.Data
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
+
+			// User name uniqueness
+			modelBuilder.Entity<User>()
+				.HasIndex(u => u.Name)
+				.IsUnique();
 
 			// Email uniqueness
 			modelBuilder.Entity<Contact>()

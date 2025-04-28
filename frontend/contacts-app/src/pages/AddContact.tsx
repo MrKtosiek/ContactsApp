@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ContactService from "../services/ContactService";
 import { Header } from "../components/Header";
@@ -6,6 +6,7 @@ import { MAIN_PAGE_ROUTE } from "../Constants";
 import styles from "../styles/ContactDetails.module.scss";
 import { useForm } from "react-hook-form";
 import { NewContactDto } from "../dtos/NewContactDto";
+import UserService from "../services/UserService";
 
 export const AddContact: React.FC = () => {
   const FIRST_NAME_INPUT = "firstName";
@@ -20,6 +21,13 @@ export const AddContact: React.FC = () => {
   const navigate = useNavigate();
   const { register, handleSubmit, watch, setValue } = useForm<NewContactDto>();
   const category = watch(CATEGORY_DROPDOWN);
+
+  useEffect(() => {
+    if (!UserService.isLoggedIn()) {
+      navigate(MAIN_PAGE_ROUTE);
+      return;
+    }
+  }, []);
 
   const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCategory = event.target.value;
