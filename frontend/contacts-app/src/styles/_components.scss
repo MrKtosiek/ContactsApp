@@ -35,3 +35,8 @@
   font-size: 0.8em;
   cursor: pointer;
 }
+
+@mixin inputError {
+  color: red;
+  font-size: 0.8em;
+}

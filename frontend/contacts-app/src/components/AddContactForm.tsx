@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import ContactService from "../services/ContactService";
 import { MAIN_PAGE_ROUTE } from "../Constants";
 import { useForm } from "react-hook-form";
-import styles from "../styles/UpdateContactForm.module.scss";
+import styles from "../styles/AddContactForm.module.scss";
 import { NewContactDto } from "../dtos/NewContactDto";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 export const AddContactForm: React.FC = () => {
   const FIRST_NAME_INPUT = "firstName";
@@ -18,7 +20,51 @@ export const AddContactForm: React.FC = () => {
   const CUSTOM_SUBCATEGORY_INPUT = "customSubCategory";
 
   const navigate = useNavigate();
-  const { register, handleSubmit, reset, watch, setValue } = useForm<NewContactDto>();
+  const schema: yup.ObjectSchema<NewContactDto> = yup.object({
+    [FIRST_NAME_INPUT]: yup.string().required("First name is required"),
+    [LAST_NAME_INPUT]: yup.string().required("Last name is required"),
+    [EMAIL_INPUT]: yup.string().required("Email is required").email("Invalid email"),
+    [PHONE_NUMBER_INPUT]: yup
+      .string()
+      .required("Phone number is required")
+      .matches(/^\d+$/, "Phone number must be digits only"),
+    [BIRTH_DATE_INPUT]: yup.date().required("Birth date is required"),
+    [PASSWORD_INPUT]: yup
+      .string()
+      .required("Password is required")
+      .min(8, "Password must be at least 8 characters")
+      .matches(/[a-zA-Z]/, "Password must contain at least one letter")
+      .matches(/\d/, "Password must contain at least one number"),
+    [CATEGORY_DROPDOWN]: yup.string().required("Category is required"),
+    [SUBCATEGORY_DROPDOWN]: yup
+      .string()
+      .nullable()
+      .defined()
+      .when("category", {
+        is: "Work",
+        then: (schema) => schema.required("Subcategory is required"),
+        otherwise: (schema) => schema.nullable(),
+      }),
+    [CUSTOM_SUBCATEGORY_INPUT]: yup
+      .string()
+      .nullable()
+      .defined()
+      .when("category", {
+        is: "Other",
+        then: (schema) => schema.required("Custom subcategory is required"),
+        otherwise: (schema) => schema.nullable(),
+      }),
+  });
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<NewContactDto>({
+    resolver: yupResolver(schema),
+  });
   const category = watch(CATEGORY_DROPDOWN);
 
   useEffect(() => {
@@ -54,47 +100,53 @@ export const AddContactForm: React.FC = () => {
     <>
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor={FIRST_NAME_INPUT}>First name</label>
-        <input id={FIRST_NAME_INPUT} {...register(FIRST_NAME_INPUT, { required: true })} />
+        <input id={FIRST_NAME_INPUT} {...register(FIRST_NAME_INPUT)} />
+        {errors.firstName && <span className={styles.error}>{errors.firstName.message}</span>}
 
         <label htmlFor={LAST_NAME_INPUT}>Last name</label>
-        <input id={LAST_NAME_INPUT} {...register(LAST_NAME_INPUT, { required: true })} />
+        <input id={LAST_NAME_INPUT} {...register(LAST_NAME_INPUT)} />
+        {errors.lastName && <span className={styles.error}>{errors.lastName.message}</span>}
 
         <label htmlFor={EMAIL_INPUT}>Email</label>
-        <input type="email" id={EMAIL_INPUT} {...register(EMAIL_INPUT, { required: true })} />
+        <input type="email" id={EMAIL_INPUT} {...register(EMAIL_INPUT)} />
+        {errors.email && <span className={styles.error}>{errors.email.message}</span>}
 
         <label htmlFor={PHONE_NUMBER_INPUT}>Phone number</label>
-        <input type="tel" id={PHONE_NUMBER_INPUT} {...register(PHONE_NUMBER_INPUT, { required: true })} />
+        <input type="tel" id={PHONE_NUMBER_INPUT} {...register(PHONE_NUMBER_INPUT)} />
+        {errors.phoneNumber && <span className={styles.error}>{errors.phoneNumber.message}</span>}
 
         <label htmlFor={BIRTH_DATE_INPUT}>Birth date</label>
-        <input type="date" id={BIRTH_DATE_INPUT} {...register(BIRTH_DATE_INPUT, { required: true })} />
+        <input type="date" id={BIRTH_DATE_INPUT} {...register(BIRTH_DATE_INPUT)} />
+        {errors.birthDate && <span className={styles.error}>{errors.birthDate.message}</span>}
 
         <label htmlFor={PASSWORD_INPUT}>Password</label>
-        <input type="text" id={PASSWORD_INPUT} {...register(PASSWORD_INPUT, { required: true })} />
+        <input type="text" id={PASSWORD_INPUT} {...register(PASSWORD_INPUT)} />
+        {errors.password && <span className={styles.error}>{errors.password.message}</span>}
 
         <label htmlFor={CATEGORY_DROPDOWN}>Category</label>
-        <select
-          id={CATEGORY_DROPDOWN}
-          {...register(CATEGORY_DROPDOWN, { required: true, onChange: handleCategoryChange })}
-        >
+        <select id={CATEGORY_DROPDOWN} {...register(CATEGORY_DROPDOWN, { onChange: handleCategoryChange })}>
           <option value="Private">Private</option>
           <option value="Work">Work</option>
           <option value="Other">Other</option>
         </select>
+        {errors.category && <span className={styles.error}>{errors.category.message}</span>}
 
         {category === "Work" && (
           <>
             <label htmlFor={SUBCATEGORY_DROPDOWN}>Subcategory</label>
-            <select id={SUBCATEGORY_DROPDOWN} {...register(SUBCATEGORY_DROPDOWN, { required: true })}>
+            <select id={SUBCATEGORY_DROPDOWN} {...register(SUBCATEGORY_DROPDOWN)}>
               <option value="Boss">Boss</option>
               <option value="Client">Client</option>
             </select>
+            {errors.subCategory && <span className={styles.error}>{errors.subCategory.message}</span>}
           </>
         )}
 
         {category === "Other" && (
           <>
             <label htmlFor={CUSTOM_SUBCATEGORY_INPUT}>Subcategory</label>
-            <input id={CUSTOM_SUBCATEGORY_INPUT} {...register(CUSTOM_SUBCATEGORY_INPUT, { required: true })} />
+            <input id={CUSTOM_SUBCATEGORY_INPUT} {...register(CUSTOM_SUBCATEGORY_INPUT)} />
+            {errors.customSubCategory && <span className={styles.error}>{errors.customSubCategory.message}</span>}
           </>
         )}
 

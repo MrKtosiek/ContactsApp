@@ -32,6 +32,11 @@ namespace ContactsApp.Services
 				throw new InvalidOperationException("Username taken.");
 			}
 
+			if (!IsValidPassword(dto.Password))
+			{
+				throw new ArgumentException("Password must be at least 8 characters long and contain at least one letter and one digit.");
+			}
+
 			var user = new User
 			{
 				Name = dto.Username,
@@ -52,6 +57,18 @@ namespace ContactsApp.Services
 			}
 
 			return GenerateToken(user);
+		}
+
+		private bool IsValidPassword(string password)
+		{
+			if (string.IsNullOrWhiteSpace(password)) return false;
+
+			// Minimum 8 chars, one letter and one digit
+			var hasMinimumLength = password.Length >= 8;
+			var hasLetter = password.Any(char.IsLetter);
+			var hasDigit = password.Any(char.IsDigit);
+
+			return hasMinimumLength && hasLetter && hasDigit;
 		}
 
 		private string GenerateToken(User user)
