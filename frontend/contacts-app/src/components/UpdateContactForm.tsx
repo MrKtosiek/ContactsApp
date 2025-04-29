@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ContactDetailsDto } from "../dtos/ContactDetailsDto";
 import { useNavigate, useParams } from "react-router-dom";
 import ContactService from "../services/ContactService";
@@ -20,7 +20,10 @@ export const UpdateContactForm: React.FC<{ contact: ContactDetailsDto }> = ({ co
   const SUBCATEGORY_DROPDOWN = "subCategory";
   const CUSTOM_SUBCATEGORY_INPUT = "customSubCategory";
 
+  const [error, setError] = useState<string | null>(null);
+
   const navigate = useNavigate();
+  
   const { id } = useParams<{ id: string }>();
   const schema: yup.ObjectSchema<UpdateContactDto> = yup.object({
     [FIRST_NAME_INPUT]: yup.string().required("First name is required"),
@@ -92,8 +95,9 @@ export const UpdateContactForm: React.FC<{ contact: ContactDetailsDto }> = ({ co
       try {
         await ContactService.updateContact(parseInt(id), data);
         navigate(MAIN_PAGE_ROUTE);
-      } catch (error) {
-        console.error("Error updating contact:", error);
+      } catch (err: any) {
+        console.error("Error updating contact:", err);
+        setError(err.response?.data?.message || "An error occurred while updating the contact.");
       }
     }
   };
@@ -154,6 +158,8 @@ export const UpdateContactForm: React.FC<{ contact: ContactDetailsDto }> = ({ co
             {errors.customSubCategory && <span className={styles.error}>{errors.customSubCategory.message}</span>}
           </>
         )}
+
+        {error && <span className={styles.error}>{error}</span>}
 
         <button type="submit">Save</button>
       </form>

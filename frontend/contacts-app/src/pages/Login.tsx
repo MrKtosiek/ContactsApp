@@ -7,10 +7,13 @@ import { useNavigate } from "react-router-dom";
 import UserService from "../services/UserService";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useState } from "react";
 
 export const Login: React.FC = () => {
   const USERNAME_INPUT = "username";
   const PASSWORD_INPUT = "password";
+
+  const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
@@ -30,8 +33,9 @@ export const Login: React.FC = () => {
     try {
       await UserService.loginUser(data);
       navigate(MAIN_PAGE_ROUTE);
-    } catch (error) {
-      console.error("Error logging in user:", error);
+    } catch (err: any) {
+      console.error("Error logging in user:", err);
+      setError(err.response?.data?.message || "An error occurred during logging in.");
     }
   };
 
@@ -48,6 +52,8 @@ export const Login: React.FC = () => {
           <label htmlFor={PASSWORD_INPUT}>Password</label>
           <input type="password" id={PASSWORD_INPUT} {...register(PASSWORD_INPUT)} />
           {errors.password && <span className={styles.error}>{errors.password.message}</span>}
+
+          {error && <span className={styles.error}>{error}</span>}
 
           <button type="submit">Login</button>
         </form>

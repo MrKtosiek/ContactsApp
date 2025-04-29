@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ContactService from "../services/ContactService";
 import { MAIN_PAGE_ROUTE } from "../Constants";
@@ -19,7 +19,10 @@ export const AddContactForm: React.FC = () => {
   const SUBCATEGORY_DROPDOWN = "subCategory";
   const CUSTOM_SUBCATEGORY_INPUT = "customSubCategory";
 
+  const [error, setError] = useState<string | null>(null);
+
   const navigate = useNavigate();
+
   const schema: yup.ObjectSchema<NewContactDto> = yup.object({
     [FIRST_NAME_INPUT]: yup.string().required("First name is required"),
     [LAST_NAME_INPUT]: yup.string().required("Last name is required"),
@@ -91,8 +94,9 @@ export const AddContactForm: React.FC = () => {
     try {
       await ContactService.addContact(data);
       navigate(MAIN_PAGE_ROUTE);
-    } catch (error) {
-      console.error("Error updating contact:", error);
+    } catch (err: any) {
+      console.error("Error updating contact:", err);
+      setError(err.response?.data?.message || "An error occurred while adding the contact.");
     }
   };
 
@@ -149,6 +153,8 @@ export const AddContactForm: React.FC = () => {
             {errors.customSubCategory && <span className={styles.error}>{errors.customSubCategory.message}</span>}
           </>
         )}
+
+        {error && <span className={styles.error}>{error}</span>}
 
         <button type="submit">Save</button>
       </form>

@@ -7,10 +7,13 @@ import UserService from "../services/UserService";
 import { RegisterDto } from "../dtos/RegisterDto";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { useState } from "react";
 
 export const Register: React.FC = () => {
   const USERNAME_INPUT = "username";
   const PASSWORD_INPUT = "password";
+
+  const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
@@ -32,11 +35,13 @@ export const Register: React.FC = () => {
   });
 
   const onSubmit = async (data: RegisterDto) => {
+    setError(null);
     try {
       await UserService.registerUser(data);
       navigate(LOGIN_ROUTE);
-    } catch (error) {
-      console.error("Error registering user:", error);
+    } catch (err: any) {
+      console.error("Error registering user:", err);
+      setError(err.response?.data?.message || "An error occurred during registration.");
     }
   };
 
@@ -54,6 +59,7 @@ export const Register: React.FC = () => {
           <input type="password" id={PASSWORD_INPUT} {...register(PASSWORD_INPUT)} />
           {errors.password && <span className={styles.error}>{errors.password.message}</span>}
 
+          {error && <span className={styles.error}>{error}</span>}
           <button type="submit">Register</button>
         </form>
       </div>
