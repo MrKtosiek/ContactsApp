@@ -19,6 +19,9 @@ namespace ContactsApp.Services
 			if (await _context.Contacts.AnyAsync(c => c.Email == dto.Email))
 				throw new InvalidOperationException("Contact with this email already exists.");
 
+			if (!IsValidPassword(dto.Password))
+				throw new ArgumentException("Password must be at least 8 characters long and contain at least one letter and one digit.");
+
 			Category? category = await _context.Categories
 				.Include(c => c.SubCategories)
 				.FirstOrDefaultAsync(c => c.Name == dto.Category);
@@ -79,6 +82,9 @@ namespace ContactsApp.Services
 			if (await _context.Contacts.AnyAsync(c => c != contact && c.Email == dto.Email))
 				throw new InvalidOperationException("This email is already used by another contact.");
 
+			if (!IsValidPassword(dto.Password))
+				throw new ArgumentException("Password must be at least 8 characters long and contain at least one letter and one digit.");
+
 			Category? category = await _context.Categories
 				.Include(c => c.SubCategories)
 				.FirstOrDefaultAsync(c => c.Name == dto.Category);
@@ -114,6 +120,18 @@ namespace ContactsApp.Services
 			await _context.SaveChangesAsync();
 		}
 
+
+		private bool IsValidPassword(string password)
+		{
+			if (string.IsNullOrWhiteSpace(password)) return false;
+
+			// Minimum 8 chars, one letter and one digit
+			var hasMinimumLength = password.Length >= 8;
+			var hasLetter = password.Any(char.IsLetter);
+			var hasDigit = password.Any(char.IsDigit);
+
+			return hasMinimumLength && hasLetter && hasDigit;
+		}
 
 		private bool CheckSubCategoryRules(string? subCategoryName, string? customSubCategoryName, Category category)
 		{
