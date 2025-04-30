@@ -232,7 +232,7 @@ ContactsApp is a full-stack application that allows users to register, authentic
 ```bash
 # From the root backend directory (ContactsApp/backend/ContactsApp)
 $ dotnet build
-$ dotnet run
+$ dotnet run --launch-profile https
 ```
 
 The backend runs on `https://localhost:7065`
