@@ -7,7 +7,7 @@ namespace ContactsApp.Models
 		public int Id { get; set; }
 		[Required] public string FirstName { get; set; }
 		[Required] public string LastName { get; set; }
-		[Required, EmailAddress] public string Email { get; set; } // unique among each user's contacts
+		[Required, EmailAddress] public string Email { get; set; } // unique
 		[Required, MinLength(8)] public string Password { get; set; } // This shouldn't be stored in a real application
 		[Required] public int CategoryId { get; set; }
 		public Category Category { get; set; }
